@@ -4,12 +4,40 @@
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link href="./styles.css", rel="stylesheet">
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <div class="playlist-bar">
+      <h2>Playlists</h2>
+      <ul>
+        <li>
+          <img src="./images/placeholder.png" alt="Playlist 1 Thumbnail">
+          <p>Playlist 1</p>
+        </li>
+        <li>
+          <img src="./images/placeholder.png" alt="Playlist 2 Thumbnail">
+          <p>Playlist 2</p>
+        </li>
+        <li>
+          <img src="./images/placeholder.png" alt="Playlist 3 Thumbnail">
+          <p>Playlist 3</p>
+        </li>
+      </ul>
+    </div>
+  
+    <div class="main-content">
+      <div class="current-song">
+        <img src="./images/placeholder.png" alt="Current Song Thumbnail">
+        <h1>Song Title</h1>
+        <p>Artist Name</p>
+      </div>
+    </div>
+  
+    <div class="controller-bar">
+      <button class="control-btn">⏮️</button>
+      <button class="control-btn">⏯️</button>
+      <button class="control-btn">⏭️</button>
+    </div>
   </body>
 </html>
