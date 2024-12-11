@@ -1,104 +1,90 @@
-/* Global Styles */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    height: 100vh;
-    display: grid;
-    grid-template-rows: auto 80px; /* Main content + footer */
-    grid-template-columns: min-content auto; /* Sidebar + main content */
-    grid-template-areas:
-      "playlist main"
-      "controller controller";
+  html {
+    height: 100%;
+    width: 100%;
   }
-  
-  /* Playlist Bar */
-  .playlist-bar {
-    grid-area: playlist;
-    background-color: #2c3e50;
-    color: white;
-    padding: 20px;
-    overflow-y: auto;
+
+  body {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    height: 100%;
+    width: 100%;
   }
-  
-  .playlist-bar h2 {
-    margin-bottom: 20px;
-    text-align: center;
+
+  main {
+    height: 100%;
+    width: 100%;
   }
-  
-  .playlist-bar ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .playlist-bar li {
+
+  .sidebar {
+    max-width: 10%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
+    background-color: white;
+    height: 100%;
+    padding: 10px 10px 10px 10px;
   }
-  
-  .playlist-bar img {
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
-  }
-  
-  .playlist-bar p {
-    margin: 0;
-    color: white;
-  }
-  
-  /* Main Content */
-  .main-content {
-    grid-area: main;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #ecf0f1;
-  }
-  
-  .current-song img {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-  }
-  
-  .current-song h1 {
-    margin: 0;
-    font-size: 24px;
-  }
-  
-  .current-song p {
-    color: #7f8c8d;
-  }
-  
-  /* Controller Bar */
-  .controller-bar {
-    grid-area: controller;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #34495e;
-    gap: 20px;
-  }
-  
-  .control-btn {
-    background: none;
+
+  .playlist-btn {
+    width: 40px;
+    height: 40px;
+    background-image: url('./images/addPlaylist.png');
+    background-size: contain;
     border: none;
-    color: white;
-    font-size: 24px;
+  }
+
+  .playlist-btn:hover {
     cursor: pointer;
-    transition: transform 0.2s;
   }
-  
-  .control-btn:hover {
-    transform: scale(1.1);
+
+  .popup-overlay {
+    position: fixed; /* Ensures the popup is fixed to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%; /* Full-screen overlay */
+    height: 100%; /* Full-screen overlay */
+    display: flex; /* Use Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: Dim the background */
+    z-index: 1000; /* Ensure it's above other elements */
+    display: none;
   }
-  
-  .control-btn:active {
-    transform: scale(0.9);
+
+  .create-playlist-popup {
+    position: absolute;
+    background-color: rgb(79, 79, 79);
+    height: 100px;
+    width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: monospace;
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
+
+  .create-txt {
+    margin: 0 0 10px 0;
+    color: rgb(211, 211, 211);
+    font-style: bold;
+  }
+
+  .playlist-name {
+    background-color: rgb(66, 66, 66);
+    box-shadow: none;
+    border-style: none;
+    border-radius: 5px;
+    width: 70%;
+    height: 30%;
+    padding: 10px 10px 10px 10px;
+    font-family: monospace;
+    color: rgb(211, 211, 211);
+  }
+
   
+  .playlist-name:focus {
+    box-shadow: none;
+    outline: none;
+  }

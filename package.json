@@ -10,6 +10,7 @@
   "author": "Faheem",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^33.2.0"
+    "electron": "^33.2.0",
+    "tailwindcss": "^3.4.16"
   }
 }

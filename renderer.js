@@ -1,3 +1,31 @@
 document.getElementById('create-playlist').addEventListener('click', () => {
-    console.log('clicked!');
+    window.playlist.create();
+    document.getElementsByClassName('popup-overlay')[0].style.display = "flex"
+
+    const escapeKey = (event) => {
+        if(event.key === "Escape") {
+            document.getElementsByClassName('popup-overlay')[0].style.display = "none"
+            document.removeEventListener('keydown', escapeKey);    
+        }
+    }
+
+    const enterKey = (event) => {
+        if(event.key === "Enter") {
+            const input = document.getElementById('playlist-input')
+            console.log(input.value);
+            if(input.value !== '') {
+                window.playlist.createPlaylist(input.value);
+            }
+            input.value = '';
+            document.getElementsByClassName('popup-overlay')[0].style.display = "none"
+            document.removeEventListener('keydown', enterKey);    
+        }
+    }
+
+    document.addEventListener('keydown', escapeKey);
+    document.addEventListener('keydown', enterKey);
+
+   
 })
+
+

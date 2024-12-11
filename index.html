@@ -8,38 +8,17 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <div class="playlist-bar">
-      <ul>
-        <li>
-          <button id="create-playlist">
-            <img src="./images/addPlaylist.png">
-          </button>
-        </li>
-        <li>
-          <img src="./images/placeholder.png" alt="Playlist 1 Thumbnail">
-        </li>
-        <li>
-          <img src="./images/placeholder.png" alt="Playlist 2 Thumbnail">
-        </li>
-        <li>
-          <img src="./images/placeholder.png" alt="Playlist 3 Thumbnail">
-        </li>
-      </ul>
-    </div>
-  
-    <div class="main-content">
-      <div class="current-song">
-        <img src="./images/placeholder.png" alt="Current Song Thumbnail">
-        <h1>Song Title</h1>
-        <p>Artist Name</p>
+    <main>
+      <div class="popup-overlay">
+        <div class="create-playlist-popup">
+          <p class="create-txt">create a playlist.</p>
+          <input id="playlist-input" class="playlist-name">
+        </div>
       </div>
-    </div>
-  
-    <div class="controller-bar">
-      <button class="control-btn">⏮️</button>
-      <button class="control-btn">⏯️</button>
-      <button class="control-btn">⏭️</button>
-    </div>
+      <aside class="sidebar">
+        <button id="create-playlist" class="playlist-btn"></button>
+      </aside>
+    </main>
   </body>
   <script src="renderer.js"></script>
 </html>
