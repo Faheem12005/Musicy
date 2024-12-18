@@ -1,4 +1,5 @@
 document.getElementById('create-playlist').addEventListener('click', () => {
+    // The create function creates the folder to store the songs
     window.playlist.create();
     document.getElementsByClassName('popup-overlay')[0].style.display = "flex"
 
@@ -9,6 +10,7 @@ document.getElementById('create-playlist').addEventListener('click', () => {
         }
     }
 
+    //this function creates the indiviual playlists
     const enterKey = (event) => {
         if(event.key === "Enter") {
             const input = document.getElementById('playlist-input')
