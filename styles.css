@@ -13,24 +13,28 @@
   main {
     height: 100%;
     width: 100%;
+    display: flex;
   }
 
   .sidebar {
-    max-width: 10%;
+    max-width: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: white;
+    background-color: grey;
     height: 100%;
     padding: 10px 10px 10px 10px;
+    gap: 20px;
   }
 
   .playlist-btn {
-    width: 40px;
-    height: 40px;
-    background-image: url('./images/addPlaylist.png');
+    width: 80px;
+    height: 80px;
+    background-image: url('./playlistImages/addPlaylist.png');
     background-size: contain;
     border: none;
+    padding: 0;
+    margin: 0;
   }
 
   .playlist-btn:hover {
