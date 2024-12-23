@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld(
         },
         getPlaylistDetails: (buttonId) => {
             return ipcRenderer.invoke('getPlaylistDetails', buttonId);
+        },
+        getSongDialog: (playlistId) => {
+            ipcRenderer.send('getSongDialog', playlistId);
         }
     }
 )

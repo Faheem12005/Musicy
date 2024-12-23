@@ -29,22 +29,43 @@ document.getElementById('create-playlist').addEventListener('click', () => {
 
 
 const openPlaylist = async (buttonId) => {
-    console.log("opening playlist...");
-    const playlistDetails = await window.playlist.getPlaylistDetails(buttonId);
+    console.log(`opening playlist... ${buttonId}` );
+    const id = buttonId.split('-')[0];
+    console.log(id);
+    const playlistDetails = await window.playlist.getPlaylistDetails(id);
     console.log(playlistDetails);
+    //now that i have playlist details, i need to replace whatevers there on the webpage currently
+    // also need to add a add button for adding songs to playlist, change image, etc here
+    const name = playlistDetails.name;
+    const imgURL = playlistDetails.image;
+    document.getElementById('playlist-view').innerHTML = 
+    `
+        <p>${name}</p>
+        <button id="${id}-add-img-btn">Add Songs</button>
+        <button>Add Image</button>
+    `;
+    
+    document.getElementById(`${id}-add-img-btn`).addEventListener('click', async () => {
+        window.playlist.getSongDialog(id);
+        //now have a array of filepaths, add them to the playlist
+
+    });
 }
 
 const loadPlaylists = async () => {
     console.log('loading playlists...');
     const playlists = await window.playlist.getPlaylists();
-    console.log(playlists);
     const songContainer = document.getElementById('playlist-sidebar');
     playlists.forEach(entry => {
         //we have the entries, now to render them in the playlist sidebar
         // this code is creating the button and adding the attributes to it
-        console.log(entry);
+        // console.log(entry);
+        // attributes:
+        // id
+        // image
+        // name
         const playlistItem = document.createElement('button');
-        playlistItem.addEventListener('click', () => openPlaylist(`${entry.dataValues.id}-${entry.dataValues.name}`));
+        playlistItem.addEventListener('click', () => openPlaylist(playlistItem.id));
         playlistItem.className = 'playlist-btn';
         playlistItem.setAttribute("id", `${entry.dataValues.id}-${entry.dataValues.name}`)
         playlistItem.style.backgroundImage = "url('./playlistImages/placeholder.png')";
