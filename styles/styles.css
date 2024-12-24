@@ -29,7 +29,7 @@ main {
 .playlist-btn {
   width: 60px;
   height: 60px;
-  background-image: url('./playlistImages/addPlaylist.png');
+  background-image: url('../images/addPlaylist.png');
   background-size: contain;
   background-color: transparent; /* Remove any button background */
   border: none;

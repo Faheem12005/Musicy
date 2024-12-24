@@ -1,0 +1,31 @@
+#playlist-view {
+    font-family: 'Arial', sans-serif;
+    color: #ffffff;
+    background: linear-gradient(to bottom, #282828, #121212);
+    padding: 20px;
+}
+
+#playlist-details {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.playlist-title {
+    font-size: 100px;
+    margin: 0;
+}
+
+.playlist-img {
+    height: 150px;
+    width: 150px;
+}
+
+.play-song-btn {
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}

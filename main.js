@@ -1,8 +1,16 @@
-const { app, BrowserWindow, ipcMain, dialog, BaseWindow } = require('electron');
-const path = require('node:path');
-const fs = require('node:fs');
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const { defaultApp } = require('node:process');
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import path from 'node:path';
+import fs from 'node:fs';
+import { Sequelize, DataTypes, Model } from 'sequelize';
+import * as mm from 'music-metadata';
+
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 // Single Sequelize instance
 const sequelize = new Sequelize({
@@ -101,9 +109,18 @@ const addSong = async(songUrl, songName) => {
 
 const updateSongs = async(songUrl, songName) => {
     const songs = fs.readdirSync('songs');
-    songs.forEach(songUrl => {
+    for(const songUrl of songs) {
+        try {
+            const filePath = `songs/${songUrl}`;
+            console.log(filePath);
+            const metadata = await mm.parseFile(filePath);
+            console.log(metadata);
+        }
+        catch(error) {
+            console.log('error occurred while parsing song metadata: ', error);
+        }
         addSong(songUrl, "PlaceHolder name");
-    });
+    };
 }
 
 //function to initlaise directories for storing songs and playlist images if they dont exist
@@ -142,6 +159,8 @@ const getPlaylistDetails = async (buttonId) => {
     return playlist.toJSON();
 }
 
+const preloadPath = path.join(__dirname, 'preload.cjs');
+
 // Create the main application window
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -151,7 +170,7 @@ const createWindow = () => {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join(__dirname, 'preload.js'),
+            preload: preloadPath,
         },
     });
 

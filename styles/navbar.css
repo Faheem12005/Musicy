@@ -1,0 +1,55 @@
+/* Navbar Styling */
+#navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    gap: 20px;
+    background-color: #1e1e1e; /* Dark background to match sidebar */
+    color: #ffffff; /* Light text for contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    border-bottom: 1px solid #333333; /* Thin border for structure */
+  }
+  
+  #navbar button {
+    display: flex;
+    align-items: center;
+    border: none;
+    background: none; /* Transparent background */
+    cursor: pointer;
+    padding: 5px;
+    color: #d3d3d3;
+  }
+  
+  #navbar button:hover {
+    background-color: #2a2a2a; /* Slightly lighter background for hover */
+    border-radius: 5px; /* Rounded edges */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+  }
+  
+  #navbar img {
+    width: 20px; /* Icon size */
+    height: 20px;
+    filter: invert(80%); /* Lightens icon to fit dark theme */
+  }
+  
+  #navbar #search-bar {
+    background-color: #444444; /* Matches the playlist name input */
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #d3d3d3; /* Light text for readability */
+    font-family: monospace;
+    font-size: 1em;
+  }
+  
+  #navbar #search-bar::placeholder {
+    color: #888888; /* Subtle placeholder color */
+  }
+  
+  #navbar #search-bar:focus {
+    outline: none;
+    border: 1px solid #555555; /* Subtle border for focus */
+    background-color: #333333; /* Slightly darker on focus */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transitions */
+  }

@@ -45,22 +45,29 @@ const openPlaylist = async (buttonId) => {
     const name = playlistDetails.name;
     const imgURL = playlistDetails.image;
     const songs = playlistDetails.Songs; //array of songs
-    document.getElementById('playlist-view').innerHTML =
-        `
-        <p>${name}</p>
+    document.getElementById('playlist-view').innerHTML = `
+        <div id="playlist-details">
+            <img class="playlist-img" src=${imgURL === null ? 'images/placeholder.png' : imgURL}>
+            <div id="playlist-text">
+                <p>Playlist</p>
+                <p class="playlist-title">${name}</p>
+            </div>
+        </div>
         <button id="${id}-add-songs-btn">Add Songs</button>
-        <button>Add Image</button>
+        <hr>
         <div id='song-container'>
             <ul>
-                ${songs.map((song) => `
-                    <li>
-                        <p>${song.songName}</p>
-                        <button class='play-song-btn' id='${song.songUrl}'>Play song</button>
-                    </li>
-                `).join('')}
+            ${songs.map((song) => `
+                <li>
+                <button class='play-song-btn' id='${song.songUrl}'>
+                    <p>${song.songName}</p>
+                    <p></p>
+                </button>
+                </li>
+            `).join('')}
             </ul>
-        </div>   
-    `;
+        </div>
+        `;
     document.getElementById(`${id}-add-songs-btn`).addEventListener('click', async () => {
         window.playlist.getSongDialog(id);
     });
@@ -79,29 +86,6 @@ const openPlaylist = async (buttonId) => {
                 .replace(/\[/g, '%5B')        // Replace "[" with %5B
                 .replace(/\]/g, '%5D');
             audio.src = fixedPath;
-            console.log(audio.src);
-
-            //event listener to enable buttons once audio has started to play
-            audio.addEventListener('loadeddata', () => {
-                document.getElementById('play-btn').disabled = false;
-                document.getElementById('seek-bar').disabled = false;
-                console.log("can play event fired");
-                document.getElementById('play-btn').children[0].setAttribute('src', './icons/controls/pause-solid.svg');
-            })
-
-            //event listener to check for the seek bar
-            audio.addEventListener('timeupdate', () => {
-                if(audio.paused) {
-                    return;
-                }
-                const duration = Math.round(audio.duration);
-                const currentTime = Math.round(audio.currentTime);
-                document.getElementById('total-duration').innerText = getTimeString(duration);
-                document.getElementById('current-time').innerText = getTimeString(currentTime);
-                const seekbar = document.getElementById('seek-bar');
-                const value = audio.currentTime / audio.duration;
-                seekbar.value = value * 100;
-            })
         });
     })
 }
