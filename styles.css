@@ -1,94 +1,122 @@
-  html {
-    height: 100%;
-    width: 100%;
-  }
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-  body {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-    height: 100%;
-    width: 100%;
-  }
+main {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  main {
-    height: 100%;
-    width: 100%;
-    display: flex;
-  }
+/* Sidebar Styling */
+.sidebar {
+  width: 120px;
+  background-color: #1e1e1e; /* Dark background for a sleek look */
+  color: #ffffff;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+}
 
-  .sidebar {
-    max-width: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: grey;
-    height: 100%;
-    padding: 10px 10px 10px 10px;
-    gap: 20px;
-  }
+.playlist-btn {
+  width: 60px;
+  height: 60px;
+  background-image: url('./playlistImages/addPlaylist.png');
+  background-size: contain;
+  background-color: transparent; /* Remove any button background */
+  border: none;
+  transition: transform 0.3s ease;
+}
 
-  .playlist-btn {
-    width: 80px;
-    height: 80px;
-    background-image: url('./playlistImages/addPlaylist.png');
-    background-size: contain;
-    border: none;
-    padding: 0;
-    margin: 0;
-  }
+.playlist-btn:hover {
+  cursor: pointer;
+  transform: scale(1.1); /* Add hover effect for interactivity */
+}
 
-  .playlist-btn:hover {
-    cursor: pointer;
-  }
+/* Popup Overlay Styling */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
 
-  .popup-overlay {
-    position: fixed; /* Ensures the popup is fixed to the viewport */
-    top: 0;
-    left: 0;
-    width: 100%; /* Full-screen overlay */
-    height: 100%; /* Full-screen overlay */
-    display: flex; /* Use Flexbox for centering */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    background-color: rgba(0, 0, 0, 0.5); /* Optional: Dim the background */
-    z-index: 1000; /* Ensure it's above other elements */
-    display: none;
-  }
+.create-playlist-popup {
+  background-color: #333333; /* Darker background for popup */
+  color: #d3d3d3; /* Light text for visibility */
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .create-playlist-popup {
-    position: absolute;
-    background-color: rgb(79, 79, 79);
-    height: 100px;
-    width: 500px;
-    padding: 20px;
-    border-radius: 10px;
-    font-family: monospace;
-    font-size: 2em;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
+.create-txt {
+  margin: 0;
+  font-size: 1.2em;
+}
 
-  .create-txt {
-    margin: 0 0 10px 0;
-    color: rgb(211, 211, 211);
-    font-style: bold;
-  }
+.playlist-name {
+  background-color: #444444; /* Matches the aesthetic */
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  color: #d3d3d3;
+  font-family: monospace;
+  font-size: 1em;
+}
 
-  .playlist-name {
-    background-color: rgb(66, 66, 66);
-    box-shadow: none;
-    border-style: none;
-    border-radius: 5px;
-    width: 70%;
-    height: 30%;
-    padding: 10px 10px 10px 10px;
-    font-family: monospace;
-    color: rgb(211, 211, 211);
-  }
+.playlist-name:focus {
+  outline: none;
+  border: 1px solid #555555; /* Subtle border for focus */
+}
 
-  
-  .playlist-name:focus {
-    box-shadow: none;
-    outline: none;
-  }
+/* Music Screen Styling */
+#music-screen {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+#playlist-view {
+  flex: 1; /* Takes up remaining space */
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #222222; /* Matches the control bar aesthetic */
+  color: #ffffff; /* Light text */
+  scrollbar-width: thin;
+  scrollbar-color: #555555 #222222;
+}
+
+#playlist-view::-webkit-scrollbar {
+  width: 8px;
+}
+
+#playlist-view::-webkit-scrollbar-thumb {
+  background-color: #555555;
+  border-radius: 4px;
+}
+
+#playlist-view::-webkit-scrollbar-thumb:hover {
+  background-color: #777777;
+}
+
+#playlist-view::-webkit-scrollbar-track {
+  background-color: #222222;
+}

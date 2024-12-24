@@ -1,0 +1,109 @@
+/* Style for the control bar */
+#playlist-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #121212; /* Dark minimalist background */
+    color: #ffffff;
+    border-top: 1px solid #333; /* Subtle border */
+    font-family: Arial, sans-serif;
+  }
+  
+  #playlist-control .track-info {
+    flex: 1;
+    font-size: 14px;
+    color: #aaa; /* Subtle text for track info */
+  }
+  
+  #playlist-control .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  #playlist-control .controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #playlist-control .controls button img {
+    filter: invert(1); /* Ensures icons are white */
+  }
+  
+  #playlist-control .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 2;
+    gap: 10px;
+  }
+  
+  #playlist-control .progress-bar span {
+    font-size: 12px;
+    color: #aaa; /* Subtle text for time */
+  }
+  
+  #playlist-control .progress-bar input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #333; /* Progress bar track */
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  #playlist-control .progress-bar input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff; /* White thumb */
+    cursor: pointer;
+  }
+  
+  #playlist-control .volume-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  #playlist-control .volume-control button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  #playlist-control .volume-control button img {
+    filter: invert(1); /* Ensures icons are white */
+  }
+  
+  #playlist-control .volume-control input[type="range"] {
+    width: 80px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #333; /* Volume bar track */
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  #playlist-control .volume-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff; /* White thumb */
+    cursor: pointer;
+  }

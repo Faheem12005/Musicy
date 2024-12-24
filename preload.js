@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer');
+const path = require('path');
 
 contextBridge.exposeInMainWorld(
     'playlist', {
@@ -16,6 +17,7 @@ contextBridge.exposeInMainWorld(
         },
         getSongDialog: (playlistId) => {
             ipcRenderer.send('getSongDialog', playlistId);
-        }
-    }
+        },
+        getcwd: () => path.resolve(__dirname),
+    },
 )

@@ -133,9 +133,11 @@ const getSongs = async () => {
 
 const getPlaylistDetails = async (buttonId) => {
     const playlist = await Playlist.findByPk(buttonId, {
-        include : {
-            model: Song,
-        }
+        include : [
+            {
+                model: Song,
+            }
+        ]
     });
     return playlist.toJSON();
 }
@@ -157,6 +159,7 @@ const createWindow = () => {
     win.once('ready-to-show', () => {
         win.show();
     });
+    win.webContents.openDevTools();
 };
 
 // Electron app events
@@ -216,7 +219,7 @@ app.whenReady().then(async () => {
                 }
         
                 console.log(song);
-                console.log("trying to add association between playlist and song " + playlist.dataValues.id + song.dataValues.songId);
+                console.log("trying to add association between playlist and song " + playlist.dataValues.id + " " + song.dataValues.songId);
                 // Associate the song with the playlist
                 await playlist.addSong(song);
                 console.log(`Added song '${localSongUrl}' to playlist.`);

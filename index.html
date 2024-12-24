@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link href="./styles.css", rel="stylesheet">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <main>
-      <div class="popup-overlay">
-        <div class="create-playlist-popup">
-          <p class="create-txt">create a playlist.</p>
-          <input id="playlist-input" class="playlist-name">
-        </div>
-      </div>
 
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <link href="./styles.css" , rel="stylesheet">
+  <link href="./audioControl.css" , rel="stylesheet">
+  <title>Hello World!</title>
+</head>
+
+<body>
+  <main>
+    <div class="popup-overlay">
+      <div class="create-playlist-popup">
+        <p class="create-txt">create a playlist.</p>
+        <input id="playlist-input" class="playlist-name">
+      </div>
+    </div>
+    <section id="music-screen">
       <aside id="playlist-sidebar" class="sidebar">
         <button id="create-playlist" class="playlist-btn"></button>
-        
       </aside>
-      <section id="playlist-view">
+      <div id="playlist-view">
         <!-- playlist content displayed here -->
-         
-      </section>
-    </main>
-  </body>
-  <script src="renderer.js"></script>
+      </div>
+    </section>
+    <section id="playlist-control">
+      <audio id="audio-element"></audio>
+      <div class="track-info"></div>
+      <div class="controls">
+        <button id="play-btn" disabled>
+          <img src="./icons/controls/play-solid.svg" height="25px" width="25px" />
+        </button>
+      </div>
+      <div class="progress-bar">
+        <span id="current-time"></span>
+        <input type="range" id="seek-bar" min="0" max="100" step="any" disabled>
+        <span id="total-duration"></span>
+      </div>
+      <div class="volume-control">
+        <button id="mute-btn">
+          <img src="./icons/controls/volume-low-solid.svg" height="25px" width="25px" />
+        </button>
+        <input type="range" id="volume-bar" min="0" max="100" value="50">
+      </div>
+    </section>
+  </main>
+</body>
+<script src="renderer.js"></script>
+<script src="./utils/audioControl.js"></script>
+
 </html>
