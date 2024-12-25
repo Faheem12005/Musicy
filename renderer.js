@@ -40,8 +40,6 @@ const openPlaylist = async (buttonId) => {
     console.log(id);
     const playlistDetails = await window.playlist.getPlaylistDetails(id);
     console.log(playlistDetails);
-    //now that i have playlist details, i need to replace whatevers there on the webpage currently
-    // also need to add a add button for adding songs to playlist, change image, etc here
     const name = playlistDetails.name;
     const imgURL = playlistDetails.image;
     const songs = playlistDetails.Songs; //array of songs
@@ -59,15 +57,93 @@ const openPlaylist = async (buttonId) => {
             <ul>
             ${songs.map((song) => `
                 <li>
-                <button class='play-song-btn' id='${song.songUrl}'>
-                    <p>${song.songName}</p>
-                    <p></p>
-                </button>
+                <div class='play-song-btn' id='${song.songUrl}'>
+                    <p class='song-name' contenteditable="false">${song.songName}</p>
+                    <p class='song-artist' contenteditable="false">${song.songArtist}</p>
+                    <div class="song-configure-btn"><img src="icons/playlist/gear-solid.svg"></div>
+                    <p>${getTimeString(song.songDuration)}</p>
+                </div>
                 </li>
             `).join('')}
             </ul>
         </div>
         `;
+
+
+        //CODE TO OPEN MODAL FOR CONFIGURING SONG METADATA 
+    const songItems = document.getElementsByClassName('play-song-btn');
+    for (const songItem of songItems) {
+        const configureButton = songItem.querySelector('.song-configure-btn');
+        configureButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent event bubbling
+
+            // Get song data
+            const songName = songItem.querySelector('.song-name').textContent;
+            const songArtist = songItem.querySelector('.song-artist').textContent;
+
+            // Create a modal popup
+            const modal = document.createElement('div');
+            modal.classList.add('modal');
+
+            // Modal content
+            modal.innerHTML = `
+            <div class="modal-content">
+                <p>Edit Song Details</p>
+                <div>
+                    <label for="song-name-input">Song Name:</label>
+                    <input type="text" id="song-name-input" value="${songName}">
+                </div>
+                <div>
+                    <label for="song-artist-input">Song Artist:</label>
+                    <input type="text" id="song-artist-input" value="${songArtist}">
+                </div>
+            </div>
+        `;
+
+            // Append modal to body
+            document.body.appendChild(modal);
+
+
+            document.addEventListener('keydown', async (event) => {
+                if(event.key !== 'Enter') {
+                    return;
+                }
+                const newName = modal.querySelector('#song-name-input').value;
+                const newArtist = modal.querySelector('#song-artist-input').value;
+
+                // Update the song data in the original item
+                songItem.querySelector('.song-name').textContent = newName;
+                songItem.querySelector('.song-artist').textContent = newArtist;
+
+                //now that the song details are updated, need to send request to database
+                try {
+                    await window.playlist.updateSong(songItem.id, newName, newArtist);
+                }
+                catch(error) {
+                    console.error('error occured while updating the database for song configuration: ', error);
+                }
+                finally{
+                    // Close the modal
+                    modal.remove();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                // Close the modal
+                if(event.key == 'Escape') {
+                    modal.remove();
+                }
+            });
+
+            // Close the modal when clicking outside it
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        });
+    }
+
     document.getElementById(`${id}-add-songs-btn`).addEventListener('click', async () => {
         window.playlist.getSongDialog(id);
     });
@@ -75,7 +151,7 @@ const openPlaylist = async (buttonId) => {
     const playButtons = document.querySelectorAll('.play-song-btn');
     playButtons.forEach((button) => {
 
-        button.addEventListener('click', () => {
+        button.addEventListener('dblclick', () => {
             console.log(`button pressed with url: ` + button.id);
             const audio = document.getElementById("audio-element");
             audio.autoplay = true;

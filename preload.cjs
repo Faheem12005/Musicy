@@ -19,5 +19,9 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.send('getSongDialog', playlistId);
         },
         getcwd: () => path.resolve(__dirname),
+
+        updateSong: (songId, newName, newArtist) => {
+            ipcRenderer.send('updateSong', [songId, newName, newArtist]);
+        }
     },
 )

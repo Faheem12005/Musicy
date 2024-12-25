@@ -53,7 +53,12 @@ Song.init(
         },
         songName: {
             type: DataTypes.STRING,
-            allowNull: false,
+        },
+        songArtist: {
+            type: DataTypes.STRING,
+        },
+        songDuration: {
+            type: DataTypes.DOUBLE,
         },
         songUrl: {
             type: DataTypes.STRING,
@@ -90,39 +95,6 @@ const createPlaylist = async (input) => {
     }
 };
 
-//function to add a song to the database
-const addSong = async(songUrl, songName) => {
-    try {
-        if(typeof songName !== 'string' || typeof songUrl !== 'string' || !songName || !songUrl) {
-            console.log("invalid song data");
-            return;
-        }
-        await Song.create({ songName: songName, songUrl: songUrl});
-    } 
-    catch(error) {
-        if(error instanceof Sequelize.UniqueConstraintError) {
-            console.error('error adding songs');
-        }
-        else { console.log(error); }
-    }
-}
-
-const updateSongs = async(songUrl, songName) => {
-    const songs = fs.readdirSync('songs');
-    for(const songUrl of songs) {
-        try {
-            const filePath = `songs/${songUrl}`;
-            console.log(filePath);
-            const metadata = await mm.parseFile(filePath);
-            console.log(metadata);
-        }
-        catch(error) {
-            console.log('error occurred while parsing song metadata: ', error);
-        }
-        addSong(songUrl, "PlaceHolder name");
-    };
-}
-
 //function to initlaise directories for storing songs and playlist images if they dont exist
 const makeDirectory = () => {
     try {
@@ -136,17 +108,6 @@ const makeDirectory = () => {
         console.error('Error creating directories:', error);
     }
 };
-
-const getSongs = async () => {
-    try {
-        const songs = await Song.findAll();
-        return songs;
-    }
-    catch(error) {
-        console.error("error getting songs: ", error);
-    }
-    
-}
 
 const getPlaylistDetails = async (buttonId) => {
     const playlist = await Playlist.findByPk(buttonId, {
@@ -191,7 +152,6 @@ app.whenReady().then(async () => {
     // Initialize database and create directories
     await initializeDatabase();
     makeDirectory();
-    await updateSongs();
     // Listen for IPC events
     ipcMain.on('create-new-playlist', async (event, input) => {
         await createPlaylist(input);
@@ -201,8 +161,6 @@ app.whenReady().then(async () => {
         const playlists = await Playlist.findAll();
         return playlists;
     });
-
-    ipcMain.handle('getSongs', getSongs);
 
     ipcMain.handle('getPlaylistDetails', async(event, buttonId) => {
         return getPlaylistDetails(buttonId);
@@ -224,28 +182,57 @@ app.whenReady().then(async () => {
                 const localSongUrl = songUrl.split("\\").pop();
                 console.log("=====================");
                 console.log(localSongUrl);
-        
-                // Find the song in the database
-                const song = await Song.findOne({
+                const filePath = `songs/${localSongUrl}`;
+                const metadata = await mm.parseFile(filePath);
+                // Find the song in the database, otherwise create entry if not already present
+
+                // IF ANY OF THE METADATA VALUES ARE NULL, NEED TO CREATE A POPUP OR PROMPT USER TO GIVE THEM VALUES
+
+                const song = await Song.findOrCreate({
                     where: {
                         songUrl: localSongUrl,
                     },
+                    defaults: {
+                        songName: metadata.common.title,
+                        songArtist: metadata.common.artist,
+                        songDuration: metadata.format.duration,
+                        songUrl: localSongUrl
+                    }
                 });
-        
-                if (!song) {
-                    console.error(`Song with URL ${localSongUrl} not found in the database.`);
-                    continue;
-                }
-        
-                console.log(song);
-                console.log("trying to add association between playlist and song " + playlist.dataValues.id + " " + song.dataValues.songId);
+                //song is an array, with first value being the instance, and the second value being a boolean to indicate if song was
+                // created or not
+                console.log(song[0]);
                 // Associate the song with the playlist
-                await playlist.addSong(song);
+                await playlist.addSong(song[0]);
                 console.log(`Added song '${localSongUrl}' to playlist.`);
             }
         } catch (error) {
             console.error("Error while adding songs to playlist:", error);
         }
+    });
+
+    ipcMain.on('updateSong', async (event, args) => {
+        const songUrl = args[0];
+        const songName = args[1];
+        const songArtist = args[2];
+        try {
+            const song = await Song.findOne({
+                where: {
+                    songUrl: songUrl,
+                }
+            })
+            song.set({
+                songName: songName,
+                songArtist: songArtist,
+            })
+            
+            //now save it to the database
+            await song.save();
+        }
+        catch(error) {
+            console.error("error occured while fetching: ", error);
+        }
+        
     });
     
     // Create the app window

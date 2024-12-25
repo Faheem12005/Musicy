@@ -23,9 +23,115 @@
 
 .play-song-btn {
     width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    height: 50px;
+    align-items: center;
+    background-color: transparent;
+    transition: background-color 0.3s, box-shadow 0.3s; 
+}
+
+.play-song-btn:hover {
+    background-color: rgba(161, 161, 161, 0.1); /* Add a subtle highlight */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for emphasis */
+}
+
+.song-name {
+    padding-left: 10px;
+}
+
+.song-name,
+.song-artist {
+    font-size: 14px; /* Adjust font size for the song name and artist */
+    white-space: nowrap; /* Prevent the song name or artist name from breaking into multiple lines */
+    overflow: hidden;
+    text-overflow:ellipsis;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
+}
+
+.song-configure-btn {
+    background-color: transparent;
+    height: 25px;
+    width: 25px;
+    opacity: 0%;
+    transition: opacity 0.1s ease;
+}
+
+.play-song-btn:hover .song-configure-btn {
+    opacity: 1;
+}
+
+.song-configure-btn:hover {
+    cursor: pointer;
+
+}
+
+
+
+/* css for the song configure modal */
+
+/* Modal Overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: "Courier New", Courier, monospace; /* Monospace font */
+    color: #ffffff; /* White text for contrast */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #2b2b2b; /* Dark background for content */
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    text-align: left;
+}
+
+/* Modal Header */
+.modal-content p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Form Fields */
+.modal-content label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    display: block;
+    color: #dddddd; /* Light gray for labels */
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: #1e1e1e; /* Slightly lighter dark for inputs */
+    color: #ffffff;
+    font-family: "Courier New", Courier, monospace;
+    box-sizing: border-box;
+
+}
+
+/* Focused Input */
+.modal-content input:focus {
+    outline: none;
+    border-color: #888888; /* Subtle border highlight */
+    background-color: #252525;
 }
