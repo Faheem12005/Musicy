@@ -33,7 +33,6 @@
 
 .play-song-btn:hover {
     background-color: rgba(161, 161, 161, 0.1); /* Add a subtle highlight */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for emphasis */
 }
 
 .song-name {

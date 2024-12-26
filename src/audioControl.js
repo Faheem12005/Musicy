@@ -67,10 +67,3 @@ seekBar.addEventListener('input', (event) => {
     const value = (event.target.value / 100) * audio.duration;
     audio.currentTime = value;
 });
-
-// Once the user is done seeking, resume playing
-seekBar.addEventListener('change', (event) => {
-    const audio = document.getElementById('audio-element');
-    const value = (event.target.value / 100) * audio.duration;
-    audio.currentTime = value;
-});
