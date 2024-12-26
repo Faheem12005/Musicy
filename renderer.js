@@ -58,8 +58,8 @@ const openPlaylist = async (buttonId) => {
             ${songs.map((song) => `
                 <li>
                 <div class='play-song-btn' id='${song.songUrl}'>
-                    <p class='song-name' contenteditable="false">${song.songName}</p>
-                    <p class='song-artist' contenteditable="false">${song.songArtist}</p>
+                    <p class='song-name'>${song.songName}</p>
+                    <p class='song-artist' >${song.songArtist}</p>
                     <div class="song-configure-btn"><img src="icons/playlist/gear-solid.svg"></div>
                     <p>${getTimeString(song.songDuration)}</p>
                 </div>
@@ -151,7 +151,7 @@ const openPlaylist = async (buttonId) => {
     const playButtons = document.querySelectorAll('.play-song-btn');
     playButtons.forEach((button) => {
 
-        button.addEventListener('dblclick', () => {
+        button.addEventListener('dblclick', (event) => {
             console.log(`button pressed with url: ` + button.id);
             const audio = document.getElementById("audio-element");
             audio.autoplay = true;
@@ -162,6 +162,8 @@ const openPlaylist = async (buttonId) => {
                 .replace(/\[/g, '%5B')        // Replace "[" with %5B
                 .replace(/\]/g, '%5D');
             audio.src = fixedPath;
+            document.getElementById('track-name').innerText = button.children[0].innerText;
+            document.getElementById('track-artist').innerText = button.children[1].innerText;
         });
     })
 }

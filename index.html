@@ -36,20 +36,23 @@
     </section>
     <section id="playlist-control">
       <audio id="audio-element"></audio>
-      <div class="track-info"></div>
+      <div class="track-info">
+        <p id="track-name"></p>
+        <p id="track-artist"></p>
+      </div>
       <div class="controls">
         <button id="play-btn" disabled>
-          <img src="./icons/controls/play-solid.svg" height="25px" width="25px" />
+          <img src="./icons/controls/play-solid.svg" height="20px" width="20px" />
         </button>
-      </div>
-      <div class="progress-bar">
-        <span id="current-time"></span>
-        <input type="range" id="seek-bar" min="0" max="100" step="any" disabled>
-        <span id="total-duration"></span>
+        <div class="progress-bar">
+          <span id="current-time"></span>
+          <input type="range" id="seek-bar" min="0" max="100" step="any" disabled>
+          <span id="total-duration"></span>
+        </div>
       </div>
       <div class="volume-control">
         <button id="mute-btn">
-          <img src="./icons/controls/volume-low-solid.svg" height="25px" width="25px" />
+          <img src="./icons/controls/volume-low-solid.svg" height="20px" width="20px" />
         </button>
         <input type="range" id="volume-bar" min="0" max="1" step="any">
       </div>
