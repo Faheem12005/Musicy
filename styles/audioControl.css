@@ -10,22 +10,23 @@
     color: #ffffff;
     border-top: 1px solid #333; /* Subtle border */
     font-family: Arial, sans-serif; 
-  }
-  
-  #playlist-control .track-info {
+}
+
+#playlist-control .track-info {
     justify-self: start;
     font-size: 14px;
     color: #aaa; /* Subtle text for track info */
-  }
-  
-  #playlist-control .controls {
+}
+
+#playlist-control .controls {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-  }
-  
-  #playlist-control .controls button {
+    gap: 10px;
+}
+
+#playlist-control .controls button {
     background: none;
     border: none;
     cursor: pointer;
@@ -33,27 +34,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  #playlist-control .controls button img {
+}
+
+#playlist-control .controls button img {
     filter: invert(1); /* Ensures icons are white */
-  }
-  
-  #playlist-control .progress-bar {
+}
+
+#playlist-control .progress-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 2;
-    max-width: 550px;
+    width: 550px;
     gap: 10px;
-  }
-  
-  #playlist-control .progress-bar span {
+    grid-column: span 3; /* Make the progress bar span all columns */
+}
+
+#playlist-control .progress-bar span {
     font-size: 12px;
     color: #aaa; /* Subtle text for time */
-  }
-  
-  #playlist-control .progress-bar input[type="range"] {
+}
+
+#playlist-control .progress-bar input[type="range"] {
     flex: 1;
     -webkit-appearance: none;
     max-width: 550px;
@@ -63,37 +64,37 @@
     border-radius: 2px;
     outline: none;
     cursor: pointer;
-  }
-  
-  #playlist-control .progress-bar input[type="range"]::-webkit-slider-thumb {
+}
+
+#playlist-control .progress-bar input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #ffffff; /* White thumb */
     cursor: pointer;
-  }
-  
-  #playlist-control .volume-control {
+}
+
+#playlist-control .volume-control {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     justify-self: end;
-  }
-  
-  #playlist-control .volume-control button {
+}
+
+#playlist-control .volume-control button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 5px;
-  }
-  
-  #playlist-control .volume-control button img {
+}
+
+#playlist-control .volume-control button img {
     filter: invert(1); /* Ensures icons are white */
-  }
-  
-  #playlist-control .volume-control input[type="range"] {
+}
+
+#playlist-control .volume-control input[type="range"] {
     width: 80px;
     -webkit-appearance: none;
     appearance: none;
@@ -102,13 +103,21 @@
     border-radius: 2px;
     outline: none;
     cursor: pointer;
-  }
-  
-  #playlist-control .volume-control input[type="range"]::-webkit-slider-thumb {
+}
+
+#playlist-control .volume-control input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #ffffff; /* White thumb */
     cursor: pointer;
-  }
+}
+
+#current-time {
+  width: 20px;
+}
+
+#total-duration {
+  width: 20px;
+}
