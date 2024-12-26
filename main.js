@@ -3,25 +3,27 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import * as mm from 'music-metadata';
-
-
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Paths for persistent storage
+const userDataPath = app.getPath('userData');
+const songsDirectory = path.join(userDataPath, 'songs');
+const playlistImagesDirectory = path.join(userDataPath, 'playlistImages');
+const databasePath = path.join(userDataPath, 'musicy.db');
 
-// Single Sequelize instance
+// Initialize Sequelize instance
 const sequelize = new Sequelize({
     logging: false,
     dialect: 'sqlite',
-    storage: 'musicy.db',
+    storage: databasePath,
 });
 
 // Define Playlist Model
 class Playlist extends Model {}
-
 Playlist.init(
     {
         id: {
@@ -41,8 +43,8 @@ Playlist.init(
     { sequelize, timestamps: false }
 );
 
+// Define Song Model
 class Song extends Model {}
-
 Song.init(
     {
         songId: {
@@ -64,61 +66,64 @@ Song.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-        }
+        },
     },
-    { sequelize, timestamps: false}
+    { sequelize, timestamps: false }
 );
 
-Song.belongsToMany(Playlist, { through: 'PlaylistSong'});
-Playlist.belongsToMany(Song, { through: 'PlaylistSong'});
+// Define relationships
+Song.belongsToMany(Playlist, { through: 'PlaylistSong' });
+Playlist.belongsToMany(Song, { through: 'PlaylistSong' });
 
-// Function to sync database tables
+// Function to initialize database
 const initializeDatabase = async () => {
     try {
         await sequelize.authenticate();
         console.log('Database connection established.');
         await sequelize.sync();
-        console.log('Playlist table synced.');
+        console.log('Database tables synced.');
     } catch (error) {
         console.error('Database initialization error:', error);
     }
 };
 
-// Function to create a playlist
-const createPlaylist = async (input) => {
+// Function to create directories for storing assets
+const makeDirectory = () => {
     try {
-        const playlist = await Playlist.create({ name: input });
-        return input;
+        const directories = [songsDirectory, playlistImagesDirectory];
+        directories.forEach((dir) => {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+        });
+    } catch (error) {
+        console.error('Error creating directories:', error);
+    }
+};
+
+// Function to create a playlist
+const createPlaylist = async (name) => {
+    try {
+        const playlist = await Playlist.create({ name });
+        return playlist;
     } catch (error) {
         console.error('Error creating playlist:', error);
         return null;
     }
 };
 
-//function to initlaise directories for storing songs and playlist images if they dont exist
-const makeDirectory = () => {
+// Function to retrieve playlist details
+const getPlaylistDetails = async (playlistId) => {
     try {
-        if (!fs.existsSync(path.join(__dirname, '/songs'))) {
-            fs.mkdirSync(path.join(__dirname, '/songs'));
-        }
-        if (!fs.existsSync(path.join(__dirname, '/playlistImages'))) {
-            fs.mkdirSync(path.join(__dirname, '/playlistImages'));
-        }
+        const playlist = await Playlist.findByPk(playlistId, {
+            include: [Song],
+        });
+        return playlist ? playlist.toJSON() : null;
     } catch (error) {
-        console.error('Error creating directories:', error);
+        console.error('Error fetching playlist details:', error);
+        return null;
     }
 };
-
-const getPlaylistDetails = async (buttonId) => {
-    const playlist = await Playlist.findByPk(buttonId, {
-        include : [
-            {
-                model: Song,
-            }
-        ]
-    });
-    return playlist.toJSON();
-}
 
 const preloadPath = path.join(__dirname, 'preload.cjs');
 
@@ -136,10 +141,43 @@ const createWindow = () => {
     });
 
     win.loadFile('index.html');
-    win.once('ready-to-show', () => {
-        win.show();
-    });
+    win.once('ready-to-show', () => win.show());
     win.webContents.openDevTools();
+};
+
+// Function to add songs to a playlist
+const addSongsToPlaylist = async (playlistId, songPaths) => {
+    try {
+        const playlist = await Playlist.findByPk(playlistId);
+        if (!playlist) throw new Error('Playlist not found');
+
+        for (const songPath of songPaths) {
+            const localSongUrl = path.basename(songPath);
+            const filePath = path.join(songsDirectory, localSongUrl);
+            const metadata = await mm.parseFile(filePath);
+
+            // Prompt user for missing metadata
+            if (!metadata.common.title || !metadata.common.artist) {
+                console.warn(`Missing metadata for ${localSongUrl}`);
+                continue;
+            }
+
+            const [song] = await Song.findOrCreate({
+                where: { songUrl: localSongUrl },
+                defaults: {
+                    songName: metadata.common.title,
+                    songArtist: metadata.common.artist,
+                    songDuration: metadata.format.duration,
+                    songUrl: localSongUrl,
+                },
+            });
+
+            await playlist.addSong(song);
+            console.log(`Added song '${localSongUrl}' to playlist.`);
+        }
+    } catch (error) {
+        console.error('Error while adding songs to playlist:', error);
+    }
 };
 
 // Electron app events
@@ -148,93 +186,44 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(async () => {
-    // getSongs();
-    // Initialize database and create directories
     await initializeDatabase();
     makeDirectory();
-    // Listen for IPC events
-    ipcMain.on('create-new-playlist', async (event, input) => {
-        await createPlaylist(input);
+
+    ipcMain.on('create-new-playlist', async (event, name) => {
+        const playlist = await createPlaylist(name);
+        event.reply('playlist-created', playlist);
     });
 
-    ipcMain.handle('getPlaylists', async (event) => {
-        const playlists = await Playlist.findAll();
-        return playlists;
+    ipcMain.handle('getPlaylists', async () => {
+        return Playlist.findAll();
     });
 
-    ipcMain.handle('getPlaylistDetails', async(event, buttonId) => {
-        return getPlaylistDetails(buttonId);
+    ipcMain.handle('getPlaylistDetails', async (event, playlistId) => {
+        return getPlaylistDetails(playlistId);
     });
 
-    //function to open dialog to add songs to a playlist
     ipcMain.on('getSongDialog', async (event, playlistId) => {
-        const songs = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
-            title: "Add songs",
-            buttonLabel: "Add Song / Songs",
-            defaultPath: path.join(__dirname, 'songs'),
-            filters: [ { name: 'Audio', extensions: ['mp3']} ],
-            properties: ["multiSelections", "dontAddToRecent"],
+        const songPaths = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+            title: 'Add songs',
+            buttonLabel: 'Add Song(s)',
+            defaultPath: songsDirectory,
+            filters: [{ name: 'Audio', extensions: ['mp3'] }],
+            properties: ['multiSelections', 'dontAddToRecent'],
         });
-        const playlist = await Playlist.findByPk(playlistId);
-        //songs is an array of file urls, need to add them to the junction database
-        try {
-            for (const songUrl of songs) {
-                const localSongUrl = songUrl.split("\\").pop();
-                console.log("=====================");
-                console.log(localSongUrl);
-                const filePath = `songs/${localSongUrl}`;
-                const metadata = await mm.parseFile(filePath);
-                // Find the song in the database, otherwise create entry if not already present
-
-                // IF ANY OF THE METADATA VALUES ARE NULL, NEED TO CREATE A POPUP OR PROMPT USER TO GIVE THEM VALUES
-
-                const song = await Song.findOrCreate({
-                    where: {
-                        songUrl: localSongUrl,
-                    },
-                    defaults: {
-                        songName: metadata.common.title,
-                        songArtist: metadata.common.artist,
-                        songDuration: metadata.format.duration,
-                        songUrl: localSongUrl
-                    }
-                });
-                //song is an array, with first value being the instance, and the second value being a boolean to indicate if song was
-                // created or not
-                console.log(song[0]);
-                // Associate the song with the playlist
-                await playlist.addSong(song[0]);
-                console.log(`Added song '${localSongUrl}' to playlist.`);
-            }
-        } catch (error) {
-            console.error("Error while adding songs to playlist:", error);
-        }
+        if (songPaths) await addSongsToPlaylist(playlistId, songPaths);
     });
 
-    ipcMain.on('updateSong', async (event, args) => {
-        const songUrl = args[0];
-        const songName = args[1];
-        const songArtist = args[2];
+    ipcMain.on('updateSong', async (event, { songUrl, songName, songArtist }) => {
         try {
-            const song = await Song.findOne({
-                where: {
-                    songUrl: songUrl,
-                }
-            })
-            song.set({
-                songName: songName,
-                songArtist: songArtist,
-            })
-            
-            //now save it to the database
+            const song = await Song.findOne({ where: { songUrl } });
+            if (!song) throw new Error('Song not found');
+
+            song.set({ songName, songArtist });
             await song.save();
+        } catch (error) {
+            console.error('Error updating song:', error);
         }
-        catch(error) {
-            console.error("error occured while fetching: ", error);
-        }
-        
     });
-    
-    // Create the app window
+
     createWindow();
 });
