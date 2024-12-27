@@ -4,7 +4,7 @@ const path = require('path');
 contextBridge.exposeInMainWorld(
     'playlist', {
         createPlaylist: (input) => {
-            ipcRenderer.send('create-new-playlist', input);
+            return ipcRenderer.invoke('create-new-playlist', input);
         },
         getSongs: () => {
             return ipcRenderer.invoke('getSongs');
@@ -22,6 +22,9 @@ contextBridge.exposeInMainWorld(
 
         updateSong: (songId, newName, newArtist) => {
             ipcRenderer.send('updateSong', [songId, newName, newArtist]);
+        },
+        getAppDataPath: () => {
+            return ipcRenderer.invoke('getAppDataPath');
         }
     },
 )

@@ -1,6 +1,11 @@
 /* Style for the control bar */
 #playlist-control {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     display: grid;
+    box-sizing: border-box;
     grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
     justify-content: center;

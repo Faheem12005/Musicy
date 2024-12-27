@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import * as mm from 'music-metadata';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
+
 
 // Paths for persistent storage
 const userDataPath = app.getPath('userData');
@@ -189,9 +189,10 @@ app.whenReady().then(async () => {
     await initializeDatabase();
     makeDirectory();
 
-    ipcMain.on('create-new-playlist', async (event, name) => {
+    ipcMain.handle('create-new-playlist', async (event, name) => {
+        console.log('Creating new playlist:', name);
         const playlist = await createPlaylist(name);
-        event.reply('playlist-created', playlist);
+        return playlist;
     });
 
     ipcMain.handle('getPlaylists', async () => {
@@ -200,6 +201,10 @@ app.whenReady().then(async () => {
 
     ipcMain.handle('getPlaylistDetails', async (event, playlistId) => {
         return getPlaylistDetails(playlistId);
+    });
+
+    ipcMain.handle('getAppDataPath', () => {
+        return app.getPath('userData');
     });
 
     ipcMain.on('getSongDialog', async (event, playlistId) => {

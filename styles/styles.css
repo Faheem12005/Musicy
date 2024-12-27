@@ -6,6 +6,8 @@ html, body {
 }
 
 main {
+  padding-top: 45px;
+  padding-bottom: 95px;
   height: 100%;
   width: 100%;
   display: flex;
@@ -18,7 +20,9 @@ main {
   background-color: #1e1e1e; /* Dark background for a sleek look */
   color: #ffffff;
   height: 100%;
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,6 +34,7 @@ main {
   width: 60px;
   height: 60px;
   background-image: url('../images/addPlaylist.png');
+  background-repeat: no-repeat;
   background-size: contain;
   background-color: transparent; /* Remove any button background */
   border: none;

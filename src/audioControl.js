@@ -1,6 +1,4 @@
-//code for controlling the playlist
-
-//event listener to enable buttons once audio has started to play
+import { getTimeString } from "../utils/playlist.js";
 
 const audio = document.getElementById('audio-element');
 
