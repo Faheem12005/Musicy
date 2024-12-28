@@ -3,15 +3,27 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevent the whole page from scrolling */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 main {
+  display: flex;
+  flex: 1;
+  overflow: hidden; /* Prevent main content from scrolling */
+}
+
+#music-screen {
   padding-top: 45px;
   padding-bottom: 95px;
-  height: 100%;
-  width: 100%;
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  overflow: hidden; /* Prevent music screen from scrolling */
 }
 
 /* Sidebar Styling */
@@ -19,7 +31,6 @@ main {
   width: 120px;
   background-color: #1e1e1e; /* Dark background for a sleek look */
   color: #ffffff;
-  height: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
   box-sizing: border-box;
@@ -28,6 +39,8 @@ main {
   align-items: center;
   gap: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+  overflow-y: auto; /* Make the sidebar scrollable */
+  flex-shrink: 0; /* Prevent the sidebar from shrinking */
 }
 
 .playlist-btn {
@@ -39,64 +52,12 @@ main {
   background-color: transparent; /* Remove any button background */
   border: none;
   transition: transform 0.3s ease;
+  flex-shrink: 0; /* Prevent the button from shrinking */
 }
 
 .playlist-btn:hover {
   cursor: pointer;
   transform: scale(1.1); /* Add hover effect for interactivity */
-}
-
-/* Popup Overlay Styling */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim background */
-  z-index: 1000;
-  display: none; /* Initially hidden */
-}
-
-.create-playlist-popup {
-  background-color: #333333; /* Darker background for popup */
-  color: #d3d3d3; /* Light text for visibility */
-  width: 400px;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.create-txt {
-  margin: 0;
-  font-size: 1.2em;
-}
-
-.playlist-name {
-  background-color: #444444; /* Matches the aesthetic */
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  color: #d3d3d3;
-  font-family: monospace;
-  font-size: 1em;
-}
-
-.playlist-name:focus {
-  outline: none;
-  border: 1px solid #555555; /* Subtle border for focus */
-}
-
-/* Music Screen Styling */
-#music-screen {
-  display: flex;
-  height: 100%;
-  width: 100%;
 }
 
 #playlist-view {
