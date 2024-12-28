@@ -6,8 +6,8 @@ contextBridge.exposeInMainWorld(
         createPlaylist: (input) => {
             return ipcRenderer.invoke('create-new-playlist', input);
         },
-        getSongs: () => {
-            return ipcRenderer.invoke('getSongs');
+        getSongs: (playlistId) => {
+            return ipcRenderer.invoke('getSongs', playlistId);
         },
         getPlaylists: () => {
             return ipcRenderer.invoke('getPlaylists');

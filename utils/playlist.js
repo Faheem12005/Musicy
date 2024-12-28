@@ -1,3 +1,5 @@
+import { setQueue, getNextSong, setCurrentSongIndex, getCurrentSongIndex, getQueue} from "./songQueue.js";
+
 export const appendPlaylist = (playlist) => {
     //playlist is the object that we get from the database
     const songContainer = document.getElementById('playlist-sidebar');
@@ -31,7 +33,7 @@ const openPlaylist = async (buttonId) => {
             <ul>
             ${songs.map((song) => `
                 <li>
-                <div class='play-song-btn' id='${song.songUrl}'>
+                <div class='play-song-btn' id='${id}-${song.songId}'>
                     <p class='song-name'>${song.songName}</p>
                     <p class='song-artist' >${song.songArtist}</p>
                     <div class="song-configure-btn"><img src="icons/playlist/gear-solid.svg"></div>
@@ -126,22 +128,39 @@ const openPlaylist = async (buttonId) => {
     playButtons.forEach((button) => {
 
         button.addEventListener('dblclick', async (event) => {
-            console.log(`button pressed with url: ` + button.id);
+            console.log(`button pressed with id: ` + button.id);
             const audio = document.getElementById("audio-element");
             audio.autoplay = true;
-            const appDataPath = await window.playlist.getAppDataPath();
-            const inputPath = `${appDataPath}/songs/${button.id}`;
-            const fixedPath = inputPath
-                .replace(/\\/g, '/')          // Replace backslashes with forward slashes
-                .replace(/ /g, '%20')         // Replace spaces with %20
-                .replace(/\[/g, '%5B')        // Replace "[" with %5B
-                .replace(/\]/g, '%5D');
-            audio.src = fixedPath;
-            document.getElementById('track-name').innerText = button.children[0].innerText;
-            document.getElementById('track-artist').innerText = button.children[1].innerText;
-        });
+            // id is in the format playlistId-songId
+            const [playlistId, songId] = button.id.split('-');
+            const songs = await window.playlist.getSongs(playlistId);
+            setQueue(JSON.parse(songs));
+            console.log(getQueue());
+            setCurrentSongIndex(getQueue().findIndex((song) => song.songId == songId));
+            console.log(getCurrentSongIndex());
+            playSong(getCurrentSongIndex())});
     })
 }
+
+const playSong = async (index) => {
+    const audio = document.getElementById("audio-element");
+    const songQueue = getQueue();
+    if (index >= 0 && index < songQueue.length) {
+        const song = songQueue[index];
+        //construction path to the song
+        const appPath = await window.playlist.getAppDataPath();
+        audio.src = `${appPath}/songs/${song.songUrl}`;
+        document.getElementById('track-name').innerText = song.songName;
+        document.getElementById('track-artist').innerText = song.songArtist;
+    }
+}
+
+document.getElementById("audio-element").addEventListener('ended', () => {
+    const nextSong = getNextSong();
+    if (nextSong) {
+        playSong(getCurrentSongIndex());
+    }
+});
 
 export const getTimeString = (seconds) => {
     const minutes = Math.floor(seconds / 60);

@@ -230,5 +230,9 @@ app.whenReady().then(async () => {
         }
     });
 
+    ipcMain.handle('getSongs', async (event, playlistId) => {
+        const playlist = await Playlist.findByPk(playlistId, { include: Song });
+        return playlist ? JSON.stringify(playlist.Songs) : [];
+    });
     createWindow();
 });
