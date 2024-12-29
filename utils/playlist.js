@@ -1,4 +1,4 @@
-import { setQueue, getNextSong, setCurrentSongIndex, getCurrentSongIndex, getQueue} from "./songQueue.js";
+import { setQueue, getNextSong, setCurrentSongIndex, getCurrentSongIndex, getQueue, playSong} from "./songQueue.js";
 
 export const appendPlaylist = (playlist) => {
     //playlist is the object that we get from the database
@@ -93,7 +93,9 @@ const openPlaylist = async (buttonId) => {
 
                 //now that the song details are updated, need to send request to database
                 try {
-                    await window.playlist.updateSong(songItem.id, newName, newArtist);
+                    //songItem.id is in the format of playlistId-songId
+                    console.log(songItem.id.split('-')[1]);
+                    await window.playlist.updateSong(songItem.id.split('-')[1], newName, newArtist);
                 }
                 catch(error) {
                     console.error('error occured while updating the database for song configuration: ', error);
@@ -142,25 +144,6 @@ const openPlaylist = async (buttonId) => {
     })
 }
 
-const playSong = async (index) => {
-    const audio = document.getElementById("audio-element");
-    const songQueue = getQueue();
-    if (index >= 0 && index < songQueue.length) {
-        const song = songQueue[index];
-        //construction path to the song
-        const appPath = await window.playlist.getAppDataPath();
-        audio.src = `${appPath}/songs/${song.songUrl}`;
-        document.getElementById('track-name').innerText = song.songName;
-        document.getElementById('track-artist').innerText = song.songArtist;
-    }
-}
-
-document.getElementById("audio-element").addEventListener('ended', () => {
-    const nextSong = getNextSong();
-    if (nextSong) {
-        playSong(getCurrentSongIndex());
-    }
-});
 
 export const getTimeString = (seconds) => {
     const minutes = Math.floor(seconds / 60);

@@ -9,18 +9,23 @@
     grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 5px 20px;
     height: 95px;
     background-color: #121212; /* Dark minimalist background */
     color: #ffffff;
     border-top: 1px solid #333; /* Subtle border */
     font-family: Arial, sans-serif; 
+    overflow: hidden;
 }
 
 #playlist-control .track-info {
     justify-self: start;
     font-size: 14px;
     color: #aaa; /* Subtle text for track info */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 #playlist-control .controls {
@@ -125,4 +130,11 @@
 
 #total-duration {
   width: 20px;
+}
+
+.playback-control-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }

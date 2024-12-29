@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld(
         getcwd: () => path.resolve(__dirname),
 
         updateSong: (songId, newName, newArtist) => {
-            ipcRenderer.send('updateSong', [songId, newName, newArtist]);
+            ipcRenderer.send('updateSong', {songId, newName, newArtist});
         },
         getAppDataPath: () => {
             return ipcRenderer.invoke('getAppDataPath');

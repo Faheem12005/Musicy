@@ -1,0 +1,92 @@
+/* Modal Container */
+#queue-modal {
+    max-height: 100%;
+    background-color: #121212;
+    color: #fff;
+    padding: 20px;
+    width: 300px;
+    font-family: Arial, sans-serif;
+    display: none;
+    overflow-y: hidden;
+  }
+
+  
+  /* Header */
+  #queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .queue-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* Section Titles */
+  .queue-section-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+  }
+  
+  /* Now Playing Section */
+  .now-playing {
+    background-color: #1f1f1f;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .queue-song-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .queue-song-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+  
+  .queue-song-artist {
+    font-size: 12px;
+    color: #ccc;
+  }
+  
+  /* Next Up List */
+  #queue-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: 10px;
+    overflow-y: hidden;
+  }
+  
+  .queue-songs {
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+  }
+  
+  .queue-song-item {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .queue-song-item:last-child {
+    border-bottom: none;
+  }
+
+  #queue-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: hidden;
+  }

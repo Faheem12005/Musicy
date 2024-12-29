@@ -159,7 +159,6 @@ const addSongsToPlaylist = async (playlistId, songPaths) => {
             // Prompt user for missing metadata
             if (!metadata.common.title || !metadata.common.artist) {
                 console.warn(`Missing metadata for ${localSongUrl}`);
-                continue;
             }
 
             const [song] = await Song.findOrCreate({
@@ -218,12 +217,12 @@ app.whenReady().then(async () => {
         if (songPaths) await addSongsToPlaylist(playlistId, songPaths);
     });
 
-    ipcMain.on('updateSong', async (event, { songUrl, songName, songArtist }) => {
+    ipcMain.on('updateSong', async (event, { songId, newName, newArtist }) => {
         try {
-            const song = await Song.findOne({ where: { songUrl } });
+            const song = await Song.findByPk(songId);
             if (!song) throw new Error('Song not found');
-
-            song.set({ songName, songArtist });
+            console.log(`modifying song with new name and artist ${newName} ${newArtist}`);
+            song.set({ songName: newName, songArtist: newArtist });
             await song.save();
         } catch (error) {
             console.error('Error updating song:', error);
