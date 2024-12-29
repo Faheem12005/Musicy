@@ -8,8 +8,9 @@
   <link href="./styles/audioControl.css" , rel="stylesheet">
   <link href="./styles/navbar.css" , rel="stylesheet">
   <link href="./styles/styles.css" , rel="stylesheet">
-  <link href="./styles/playlistView.css", rel="stylesheet">
-  <link href="./styles/createPlaylist.css", rel="stylesheet">
+  <link href="./styles/playlistView.css" , rel="stylesheet">
+  <link href="./styles/createPlaylist.css" , rel="stylesheet">
+  <link href="./styles/queueModal.css" , rel="stylesheet">
   <title>Musicy</title>
 </head>
 
@@ -23,7 +24,7 @@
     </div>
     <section id="navbar">
       <button>
-        <img src ="./icons/navbar/house-solid.svg">
+        <img src="./icons/navbar/house-solid.svg">
       </button>
       <input type="text" id="search-bar">
     </section>
@@ -31,8 +32,35 @@
       <aside id="playlist-sidebar" class="sidebar">
         <button id="create-playlist" class="playlist-btn"></button>
       </aside>
+      <!-- playlist content displayed here -->
       <div id="playlist-view">
-        <!-- playlist content displayed here -->
+      </div>
+      <!-- queue modal to view current songs in queue -->
+      <div id="queue-modal">
+        <div id="queue-content">
+          <div id="queue-header">
+            <p class="queue-title">Queue</p>
+          </div>
+          <div id="queue-current">
+            <p class="queue-section-title">Now Playing</p>
+            <div class="now-playing">
+              <div class="queue-song-details">
+                <p class="queue-song-name"></p>
+                <p class="queue-song-artist"></p>
+              </div>
+            </div>
+          </div>
+          <div id="queue-list">
+            <p class="queue-section-title">Up Next</p>
+            <div class="queue-songs">
+              <!-- queue songs are listed here -->
+              <!-- <div class="queue-song-details">
+                <p class="queue-song-name">Backyard</p>
+                <p class="queue-song-artist">Travis Scott</p>
+              </div> -->
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <section id="playlist-control">
@@ -42,9 +70,20 @@
         <p id="track-artist"></p>
       </div>
       <div class="controls">
-        <button id="play-btn" disabled>
-          <img src="./icons/controls/play-solid.svg" height="20px" width="20px" />
-        </button>
+        <div class="playback-control-container">
+          <button id="prev-btn">
+            <img src="./icons/controls/step-back-solid.svg" height="20px" width="20px" />
+          </button>
+          <button id="play-btn" disabled>
+            <img src="./icons/controls/play-solid.svg" height="20px" width="20px" />
+          </button>
+          <button id="next-btn">
+            <img src="./icons/controls/step-forward-solid.svg" height="20px" width="20px" />
+          </button>
+          <button id="queue-btn">
+            <img src="./icons/controls/queue-solid.svg" height="20px" width="20px" />
+          </button>
+        </div>
         <div class="progress-bar">
           <span id="current-time"></span>
           <input type="range" id="seek-bar" min="0" max="100" step="any" disabled>
@@ -64,4 +103,5 @@
 <script src="./src/audioControl.js" type="module"></script>
 <script src="src/songConfigure.js"></script>
 <script src="src/volumeControl.js"></script>
+
 </html>

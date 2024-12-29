@@ -19,6 +19,7 @@ main {
 }
 
 #music-screen {
+  max-height: 100%;
   padding-top: 45px;
   padding-bottom: 95px;
   display: flex;
@@ -70,19 +71,27 @@ main {
   scrollbar-color: #555555 #222222;
 }
 
-#playlist-view::-webkit-scrollbar {
-  width: 8px;
+#playlist-view::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar,
+.queue-songs::-webkit-scrollbar {
+  width: 4px;
 }
 
-#playlist-view::-webkit-scrollbar-thumb {
+#playlist-view::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb,
+.queue-songs::-webkit-scrollbar-thumb {
   background-color: #555555;
   border-radius: 4px;
 }
 
-#playlist-view::-webkit-scrollbar-thumb:hover {
+#playlist-view::-webkit-scrollbar-thumb:hover,
+.sidebar::-webkit-scrollbar-thumb:hover,
+.queue-songs::-webkit-scrollbar-thumb:hover {
   background-color: #777777;
 }
 
-#playlist-view::-webkit-scrollbar-track {
+#playlist-view::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track,
+.queue-songs::-webkit-scrollbar-track {
   background-color: #222222;
 }

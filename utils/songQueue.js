@@ -27,4 +27,18 @@ function getNextSong() {
     return songQueue[currentSongIndex];
 }
 
-export { setQueue, getQueue, setCurrentSongIndex, getCurrentSongIndex, getNextSong };
+
+const playSong = async (index) => {
+    const audio = document.getElementById("audio-element");
+    const songQueue = getQueue();
+    if (index >= 0 && index < songQueue.length) {
+        const song = songQueue[index];
+        //construction path to the song
+        const appPath = await window.playlist.getAppDataPath();
+        audio.src = `${appPath}/songs/${song.songUrl}`;
+        document.getElementById('track-name').innerText = song.songName;
+        document.getElementById('track-artist').innerText = song.songArtist;
+    }
+}
+
+export { setQueue, getQueue, setCurrentSongIndex, getCurrentSongIndex, getNextSong, playSong };

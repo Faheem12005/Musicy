@@ -40,9 +40,7 @@ document.getElementById('create-playlist').addEventListener('click', () => {
 
 
 const loadPlaylists = async () => {
-    console.log('loading playlists...');
     const playlists = await window.playlist.getPlaylists();
-    console.log(playlists);
     playlists.forEach(entry => {
         appendPlaylist(entry);
     });
