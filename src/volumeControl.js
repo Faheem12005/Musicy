@@ -7,6 +7,7 @@ let isMuted = false;
 
 // Update the audio volume and UI based on the volume bar input
 volumeBar.addEventListener('input', (event) => {
+    updateVolumeFill();
     const value = parseFloat(event.target.value);
     if (value === 0) {
         mute();
@@ -46,3 +47,13 @@ const updateVolume = (volume) => {
             : 'icons/controls/volume-low-solid.svg'
     );
 };
+
+const updateVolumeFill = () => {
+    const value = volumeBar.value;
+    const percentage = value * 100;
+    volumeBar.style.background = `linear-gradient(to right, #ff9500 ${percentage}%, #333 ${percentage}%)`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateVolumeFill();
+});
