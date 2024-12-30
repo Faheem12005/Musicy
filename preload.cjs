@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld(
             return ipcRenderer.invoke('getPlaylistDetails', buttonId);
         },
         getSongDialog: (playlistId) => {
-            ipcRenderer.send('getSongDialog', playlistId);
+            return ipcRenderer.invoke('getSongDialog', playlistId);
         },
         getcwd: () => path.resolve(__dirname),
 

@@ -206,7 +206,7 @@ app.whenReady().then(async () => {
         return app.getPath('userData');
     });
 
-    ipcMain.on('getSongDialog', async (event, playlistId) => {
+    ipcMain.handle('getSongDialog', async (event, playlistId) => {
         const songPaths = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
             title: 'Add songs',
             buttonLabel: 'Add Song(s)',
