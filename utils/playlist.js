@@ -1,4 +1,4 @@
-import { setQueue, getNextSong, setCurrentSongIndex, getCurrentSongIndex, getQueue, playSong} from "./songQueue.js";
+import { setQueue, getNextSong, setCurrentSongIndex, getCurrentSongIndex, getQueue, playSong } from "./songQueue.js";
 
 export const appendPlaylist = (playlist) => {
     //playlist is the object that we get from the database
@@ -11,11 +11,13 @@ export const appendPlaylist = (playlist) => {
     songContainer.appendChild(playlistItem);
 }
 
+
 const openPlaylist = async (buttonId) => {
     console.log(`opening playlist... ${buttonId}`);
     const id = buttonId.split('-')[0];
     console.log(id);
     const playlistDetails = await window.playlist.getPlaylistDetails(id);
+    console.log(playlistDetails);
     const name = playlistDetails.name;
     const imgURL = playlistDetails.image;
     const songs = playlistDetails.Songs; //array of songs
@@ -46,13 +48,13 @@ const openPlaylist = async (buttonId) => {
         `;
 
 
-        //CODE TO OPEN MODAL FOR CONFIGURING SONG METADATA 
+    //CODE TO OPEN MODAL FOR CONFIGURING SONG METADATA 
     const songItems = document.getElementsByClassName('play-song-btn');
     for (const songItem of songItems) {
         const configureButton = songItem.querySelector('.song-configure-btn');
         configureButton.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent event bubbling
-
+            console.log('configure event triggered!');
             // Get song data
             const songName = songItem.querySelector('.song-name').textContent;
             const songArtist = songItem.querySelector('.song-artist').textContent;
@@ -74,57 +76,58 @@ const openPlaylist = async (buttonId) => {
                     <input type="text" id="song-artist-input" value="${songArtist}">
                 </div>
             </div>
-        `;
+            `;
 
             // Append modal to body
             document.body.appendChild(modal);
 
+            const closeModal = () => {
+                modal.remove();
+                document.removeEventListener('keydown', handleKeyDown);
+                modal.removeEventListener('click', handleModalClick);
+            };
 
-            document.addEventListener('keydown', async (event) => {
-                if(event.key !== 'Enter') {
-                    return;
-                }
-                const newName = modal.querySelector('#song-name-input').value;
-                const newArtist = modal.querySelector('#song-artist-input').value;
+            // Handle keydown events for the modal
+            const handleKeyDown = async (event) => {
+                if (event.key === 'Enter') {
+                    const newName = modal.querySelector('#song-name-input').value;
+                    const newArtist = modal.querySelector('#song-artist-input').value;
 
-                // Update the song data in the original item
-                songItem.querySelector('.song-name').textContent = newName;
-                songItem.querySelector('.song-artist').textContent = newArtist;
+                    // Update the song data in the original item
+                    songItem.querySelector('.song-name').textContent = newName;
+                    songItem.querySelector('.song-artist').textContent = newArtist;
 
-                //now that the song details are updated, need to send request to database
-                try {
-                    //songItem.id is in the format of playlistId-songId
-                    console.log(songItem.id.split('-')[1]);
-                    await window.playlist.updateSong(songItem.id.split('-')[1], newName, newArtist);
+                    try {
+                        console.log(songItem.id.split('-')[1]);
+                        console.log(`${newName} ${newArtist}`);
+                        await window.playlist.updateSong(songItem.id.split('-')[1], newName, newArtist);
+                    } catch (error) {
+                        console.error('Error occurred while updating the database for song configuration: ', error);
+                    } finally {
+                        closeModal(); // Close the modal and clean up listeners
+                    }
+                } else if (event.key === 'Escape') {
+                    closeModal(); // Close the modal when pressing Escape
                 }
-                catch(error) {
-                    console.error('error occured while updating the database for song configuration: ', error);
-                }
-                finally{
-                    // Close the modal
-                    modal.remove();
-                }
-            });
+            };
 
-            document.addEventListener('keydown', (event) => {
-                // Close the modal
-                if(event.key == 'Escape') {
-                    modal.remove();
-                }
-            });
-
-            // Close the modal when clicking outside it
-            modal.addEventListener('click', (e) => {
+            // Handle clicks outside the modal to close it
+            const handleModalClick = (e) => {
                 if (e.target === modal) {
-                    modal.remove();
+                    closeModal();
                 }
-            });
+            };
+
+            document.addEventListener('keydown', handleKeyDown);
+             modal.addEventListener('click', handleModalClick);
         });
     }
 
     document.getElementById(`${id}-add-songs-btn`).addEventListener('click', async () => {
-        window.playlist.getSongDialog(id);
+        await window.playlist.getSongDialog(id);
+        await openPlaylist(id);
     });
+
     //map songs to a event listener
     const playButtons = document.querySelectorAll('.play-song-btn');
     playButtons.forEach((button) => {
@@ -140,7 +143,8 @@ const openPlaylist = async (buttonId) => {
             console.log(getQueue());
             setCurrentSongIndex(getQueue().findIndex((song) => song.songId == songId));
             console.log(getCurrentSongIndex());
-            playSong(getCurrentSongIndex())});
+            playSong(getCurrentSongIndex())
+        });
     })
 }
 
