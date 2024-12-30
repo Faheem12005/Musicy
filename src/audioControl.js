@@ -16,11 +16,15 @@ audio.addEventListener('timeupdate', () => {
     }
     const duration = Math.round(audio.duration);
     const currentTime = Math.round(audio.currentTime);
+    const progress = (currentTime / duration) * 100;
+
     document.getElementById('total-duration').innerText = getTimeString(duration);
     document.getElementById('current-time').innerText = getTimeString(currentTime);
     const seekbar = document.getElementById('seek-bar');
     const value = audio.currentTime / audio.duration;
     seekbar.value = value * 100;
+
+    seekBar.style.background = `linear-gradient(to right, gray ${progress}%, #333 ${progress}%)`;  // Update seek bar fill
 })
 
 
@@ -119,4 +123,11 @@ document.getElementById('queue-btn').addEventListener('click', () => {
     } else {
         modal.style.display = 'block';
     }
+});
+
+seekBar.addEventListener('input', (event) => {
+    const value = (event.target.value / 100) * audio.duration;
+    audio.currentTime = value;
+
+    seekBar.style.background = `linear-gradient(to right, gray ${event.target.value}%, #333 ${event.target.value}%)`;
 });
