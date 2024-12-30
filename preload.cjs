@@ -25,6 +25,12 @@ contextBridge.exposeInMainWorld(
         },
         getAppDataPath: () => {
             return ipcRenderer.invoke('getAppDataPath');
+        },
+        updatePlaylist: (playlistId, newName, newImgUrl) => {
+            return ipcRenderer.invoke('updatePlaylist', {playlistId, newName, newImgUrl});
+        },
+        updatePlaylistImageDialog: () => {
+            return ipcRenderer.invoke('updatePlaylistImageDialog');
         }
     },
 )

@@ -233,5 +233,35 @@ app.whenReady().then(async () => {
         const playlist = await Playlist.findByPk(playlistId, { include: Song });
         return playlist ? JSON.stringify(playlist.Songs) : [];
     });
+
+    ipcMain.handle('updatePlaylist', async (event, { playlistId, newName, newImgUrl }) => {
+        try {
+            let playlist = await Playlist.findByPk(playlistId);
+            if (!playlist) throw new Error('Playlist not found');
+            playlist.set({ name: newName, image: newImgUrl });
+            playlist = await playlist.save();
+            return playlist.toJSON();
+        } catch (error) {
+            console.error('Error updating playlist:', error);
+        }
+    });
+
+    ipcMain.handle('updatePlaylistImageDialog', async () => {
+        const imgPaths = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+            title: 'Select Playlist Image',
+            buttonLabel: 'Select',
+            defaultPath: playlistImagesDirectory,
+            filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+            properties: ['openFile', 'dontAddToRecent'],
+        });
+        if (imgPaths) {
+            const imgPath = imgPaths[0];
+            const imgName = path.basename(imgPath);
+            const newImgPath = path.join(playlistImagesDirectory, imgName);
+            fs.copyFileSync(imgPath, newImgPath);
+            return newImgPath;
+        }
+    });
+
     createWindow();
 });

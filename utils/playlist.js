@@ -7,17 +7,98 @@ export const appendPlaylist = (playlist) => {
     playlistItem.addEventListener('click', () => openPlaylist(playlistItem.id));
     playlistItem.className = 'playlist-btn';
     playlistItem.setAttribute("id", `${playlist.dataValues.id}-${playlist.dataValues.name}`)
-    playlistItem.style.backgroundImage = "url('./playlistImages/placeholder.png')";
+    playlistItem.style.backgroundImage = `url(${playlist.dataValues.image === null ? 'images/placeholder.png' : playlist.dataValues.image})`;
     songContainer.appendChild(playlistItem);
 }
 
+const createSongListHTML = (songs, playlistId) => {
+    return `
+    <ul>
+        ${songs.map((song) => `
+            <li>
+            <div class='play-song-btn' id='${playlistId}-${song.songId}'>
+                <p class='song-name'>${song.songName}</p>
+                <p class='song-artist' >${song.songArtist}</p>
+                <div class="song-configure-btn"><img src="icons/playlist/gear-solid.svg"></div>
+                <p>${getTimeString(song.songDuration)}</p>
+            </div>
+            </li>
+        `).join('')}
+    </ul>
+    `;
+};
 
-const openPlaylist = async (buttonId) => {
-    console.log(`opening playlist... ${buttonId}`);
-    const id = buttonId.split('-')[0];
-    console.log(id);
-    const playlistDetails = await window.playlist.getPlaylistDetails(id);
-    console.log(playlistDetails);
+const attachEditPlaylist = (playlistDetails) => {
+    const id = playlistDetails.id;
+    const name = playlistDetails.name;
+    const imgURL = playlistDetails.image;
+
+    document.getElementById('playlist-details').addEventListener('click', async () => {
+        console.log('event listener triggered');
+
+        const closeModal = () => {
+            console.log('closing modal');
+            document.removeEventListener('keydown', handleKeyDown); // Remove keydown listener
+            modal.remove();
+        };
+
+        const handleKeyDown = async (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            } 
+            else if (event.key === 'Enter') {
+                const newName = document.getElementById('edit-playlist-name-input').value;
+                const newImgUrl = document.getElementById('edit-playlist-img').querySelector('img').src;
+                try {
+                    const newPlaylistObj = await window.playlist.updatePlaylist(id, newName, newImgUrl);
+                    //now to edit the playlist item in the sidebar
+                    const playlistItem = document.getElementById(`${id}-${name}`);
+                    playlistItem.id = `${newPlaylistObj.id}-${newPlaylistObj.name}`;
+                    playlistItem.style.backgroundImage = `url(${newPlaylistObj.image === null ? 'images/placeholder.png' : newPlaylistObj.image})`;
+                    //refresh the playlist view
+                    openPlaylist(playlistItem.id);
+                } catch (error) {
+                    console.error('Error updating playlist:', error);
+                }
+                closeModal(); // Close modal after successful update
+            }
+        };
+
+        const updateImage = async () => {
+            console.log('update image triggered');
+            const imgURL = await window.playlist.updatePlaylistImageDialog();
+            if(typeof(imgURL) !== 'undefined') {
+                document.getElementById('edit-playlist-img').querySelector('img').src = imgURL;
+            }
+        };
+
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        // Modal content
+        modal.innerHTML = `
+        <div class="modal-content">
+            <p>Configure Playlist ${name}</p>
+            <div id="edit-playlist-img">
+                <img src=${imgURL === null ? 'images/placeholder.png' : imgURL}>
+            </div>
+            <div id="edit-playlist-name">
+                <label for="edit-playlist-name">Song Artist:</label>
+                <input type="text" id="edit-playlist-name-input" value="${name}">
+            </div>
+        </div>
+        `;
+
+        // Append modal to body
+        document.body.appendChild(modal);
+        document.getElementById('edit-playlist-img').addEventListener('click', updateImage);
+        // Add keydown listener
+        document.addEventListener('keydown', handleKeyDown);
+    });
+};
+
+
+const createPlaylistViewHTML = (playlistDetails) => {
+    const id = playlistDetails.id;
     const name = playlistDetails.name;
     const imgURL = playlistDetails.image;
     const songs = playlistDetails.Songs; //array of songs
@@ -32,24 +113,12 @@ const openPlaylist = async (buttonId) => {
         <button id="${id}-add-songs-btn">Add Songs</button>
         <hr>
         <div id='song-container'>
-            <ul>
-            ${songs.map((song) => `
-                <li>
-                <div class='play-song-btn' id='${id}-${song.songId}'>
-                    <p class='song-name'>${song.songName}</p>
-                    <p class='song-artist' >${song.songArtist}</p>
-                    <div class="song-configure-btn"><img src="icons/playlist/gear-solid.svg"></div>
-                    <p>${getTimeString(song.songDuration)}</p>
-                </div>
-                </li>
-            `).join('')}
-            </ul>
+            ${createSongListHTML(songs, id)}
         </div>
         `;
+}
 
-
-    //CODE TO OPEN MODAL FOR CONFIGURING SONG METADATA 
-    const songItems = document.getElementsByClassName('play-song-btn');
+const handleSongConfiguration = (songItems) => {
     for (const songItem of songItems) {
         const configureButton = songItem.querySelector('.song-configure-btn');
         configureButton.addEventListener('click', (event) => {
@@ -119,9 +188,28 @@ const openPlaylist = async (buttonId) => {
             };
 
             document.addEventListener('keydown', handleKeyDown);
-             modal.addEventListener('click', handleModalClick);
+            modal.addEventListener('click', handleModalClick);
         });
     }
+}
+
+export const getTimeString = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
+const openPlaylist = async (buttonId) => {
+    console.log(`opening playlist... ${buttonId}`);
+    const id = buttonId.split('-')[0];
+    const playlistDetails = await window.playlist.getPlaylistDetails(id);
+
+    createPlaylistViewHTML(playlistDetails);
+    attachEditPlaylist(playlistDetails);
+
+    const songItems = document.getElementsByClassName('play-song-btn');
+    handleSongConfiguration(songItems);    
 
     document.getElementById(`${id}-add-songs-btn`).addEventListener('click', async () => {
         await window.playlist.getSongDialog(id);
@@ -149,9 +237,3 @@ const openPlaylist = async (buttonId) => {
 }
 
 
-export const getTimeString = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-};
